@@ -3,7 +3,6 @@ let ch2 = 0
 let ch1 = 0
 OLED12864_I2C.init(60)
 OLED12864_I2C.on()
-music.setBuiltInSpeakerEnabled(false)
 let trigger = 0
 led.enable(false)
 servos.P1.setAngle(90)
@@ -19,9 +18,9 @@ basic.forever(function () {
             trigger = 1
             ch2 = pins.digitalReadPin(DigitalPin.P6)
             if (ch2 == 1) {
-                counter += 5
+                counter += 4
             } else {
-                counter += -5
+                counter += -4
             }
             basic.pause(100)
         }
@@ -30,7 +29,7 @@ basic.forever(function () {
         ch1 = pins.digitalReadPin(DigitalPin.P5)
         if (ch1 == 0) {
             trigger = 0
-            basic.pause(500)
+            basic.pause(100)
         }
     }
     OLED12864_I2C.clear()
@@ -40,7 +39,7 @@ basic.forever(function () {
     counter,
     1
     )
-    servos.P1.setAngle(90 + counter)
+    servos.P1.setAngle(90 - counter)
     if (counter > 0) {
         pins.analogWritePin(AnalogPin.P2, 0)
         pins.analogWritePin(AnalogPin.P3, 12 * counter)
@@ -48,9 +47,8 @@ basic.forever(function () {
         pins.analogWritePin(AnalogPin.P3, 0)
         pins.analogWritePin(AnalogPin.P2, 0 - 12 * counter)
     }
-    if (counter == 80 || counter == -80) {
-        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Prelude), music.PlaybackMode.InBackground)
-        basic.pause(1000)
+    if (counter > 79 || counter < -79) {
         counter = 0
+        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Entertainer), music.PlaybackMode.UntilDone)
     }
 })
