@@ -6,6 +6,7 @@ OLED12864_I2C.on()
 music.setBuiltInSpeakerEnabled(false)
 let trigger = 0
 led.enable(false)
+servos.P1.setAngle(90)
 pins.setPull(DigitalPin.P5, PinPullMode.PullUp)
 pins.setPull(DigitalPin.P6, PinPullMode.PullUp)
 OLED12864_I2C.clear()
@@ -39,16 +40,17 @@ basic.forever(function () {
     counter,
     1
     )
+    servos.P1.setAngle(90 + counter)
     if (counter > 0) {
         pins.analogWritePin(AnalogPin.P2, 0)
-        pins.analogWritePin(AnalogPin.P3, counter)
+        pins.analogWritePin(AnalogPin.P3, 12 * counter)
     } else {
         pins.analogWritePin(AnalogPin.P3, 0)
-        pins.analogWritePin(AnalogPin.P2, 0 - counter)
+        pins.analogWritePin(AnalogPin.P2, 0 - 12 * counter)
     }
-    if (counter == 200 || counter == -200) {
-        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Entertainer), music.PlaybackMode.InBackground)
-        basic.pause(500)
+    if (counter == 80 || counter == -80) {
+        music._playDefaultBackground(music.builtInPlayableMelody(Melodies.Prelude), music.PlaybackMode.InBackground)
+        basic.pause(1000)
         counter = 0
     }
 })
